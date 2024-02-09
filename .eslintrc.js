@@ -1,6 +1,6 @@
 module.exports = {
 	parserOptions: {
-		ecmaVersion: 2018,
+		ecmaVersion: "latest",
 		sourceType: 'module',
 		ecmaFeatures: {
 			modules: true,
@@ -11,13 +11,6 @@ module.exports = {
 		es6: true,
 		jquery: true,
 		mocha: true,
-	},
-	globals: {
-		"wp": false,
-		"ajaxurl": false,
-		"adcmNonceAjaxObject": false,
-		"feedbackRespnose": false,
-		"pagenow": false,
 	},
 	extends: [
         'eslint:recommended',
@@ -30,23 +23,7 @@ module.exports = {
 		'semi': [ 'error', 'always' ],    // Use semicolons at the end of statements
 		'no-alert': 1,
 		'no-console': 1,
-		'comma-spacing': [
-			'error',
-			{
-				'before': false,
-				'after': true
-			}
-		],  // Add space after commas
-
 		// Yoda Condition
 		'yoda': [ 'error', 'always' ],
 	},
-	ignorePatterns: [
-		'node_modules/',
-		'dist/',
-		'build/',
-		'webpack.config.js',
-		'.eslintrc.js',
-		'vendor/'
-	],
 };

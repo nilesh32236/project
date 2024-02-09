@@ -1,0 +1,1 @@
+{"version":3,"file":"css/main.min.css","mappings":"AAMC,oBADG,iBAKqB,CAJxB,OAIG,oBAAqB","sources":["webpack://project/./assets/css/main.scss"],"sourcesContent":[".test {\n    text-align: center;\n}\n\n.test2 {\n    text-align: center;\n}\n\n.test3 {\n    text-align: center;\n    text-decoration: none;\n}"],"names":[],"sourceRoot":""}

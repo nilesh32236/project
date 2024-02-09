@@ -9,37 +9,37 @@ const glob                 = require( 'glob' );
 
 module.exports = {
 	entry: getEntries(
-		[ path.resolve( __dirname, 'assets' )/* , path.resolve( __dirname, 'public' ) */ ],
+		[ path.resolve( __dirname, 'assets/js' ) ],
 		[ '.js' ]
 	),
 	output: {
-		filename: '[name].bundle.js',
-		path: path.resolve( __dirname, 'dist' ),
+		filename: '[name].min.js',
+		path: path.resolve( 'dist' ),
 	},
 	module: {
 		rules: [
 			{
-				test: /\.js$/,
-				exclude: /(node_modules|vendor)/,
-				use: {
-					loader: 'babel-loader',
-					options: {
-						presets: [ '@babel/preset-env' ],
-					},
+			test: /\.js$/,
+			exclude: /(node_modules|vendor)/,
+			use: {
+				loader: 'babel-loader',
+				options: {
+					presets: [ '@babel/preset-env' ],
 				},
 			},
-			{
-				test: /\.scss$/,
-				use: [
-					MiniCssExtractPlugin.loader,
-					'css-loader',
-					'sass-loader'
-				],
-			},
-			{
-				test: /\.css$/,
-				use: [MiniCssExtractPlugin.loader, 'css-loader'],
-			}
+		},
+		{
+			test: /\.scss$/,
+			use: [
+				MiniCssExtractPlugin.loader,
+				'css-loader',
+				'sass-loader'
+			],
+		},
+		{
+			test: /\.css$/,
+			use: [ MiniCssExtractPlugin.loader, 'css-loader' ],
+		}
 		],
 	},
 	watchOptions: {
@@ -49,12 +49,20 @@ module.exports = {
 	optimization: {
 		minimizer: [
 			new TerserPlugin( {
+				terserOptions: {
+					sourceMap: true, // Generate source maps for minified JS files
+				},
 				extractComments: false,
 			} ),
-			new CssMinimizerPlugin(),
+			new CssMinimizerPlugin( {
+				minimizerOptions: {
+					sourceMap: true, // Generate source maps for minified CSS files
+				},
+			} ),
 		],
 	},
 	mode: 'production',
+	devtool: 'source-map', // Use 'source-map' devtool to generate source maps
 	resolve: {
 		modules: [
 			path.resolve( __dirname, 'admin/js' ),
@@ -69,30 +77,20 @@ module.exports = {
 	plugins: [
 		new MiniCssExtractPlugin( {
 			filename: ({ chunk }) => {
-				const name = chunk.name.replace( /js/, 'css' ) + '.bundle.css';
+				const name = chunk.name.replace( /js/, 'css' ) + '.min.css';
 				return name;
 			},
 		}),
-		// new webpack.ProvidePlugin({
-		//   $: 'jquery',
-		//   jQuery: 'jquery',
-		//   'window.jQuery': 'jquery',
-		// }),
-		new ESLintWebpackPlugin({
-			emitError: true,
-			emitWarning: true,
-			failOnError: true,
-			failOnWarning: false,
-		}),
+		new ESLintWebpackPlugin(),
 	],
 };
 
 function getEntries( directories, extensions ) {
 	const entry = {};
-	const excludFiles = ['node_modules', 'vendor', 'util'];
+	const excludFiles = [ 'node_modules', 'vendor', 'util' ];
 	directories.forEach( ( directory ) => {
 		extensions.forEach( ( extension ) => {
-			const files = glob.sync( path.join( directory, `**/*${extension}` ) );
+			const files = glob.sync( path.join( directory, `**/*${ extension }` ) );
 			files.forEach( ( file ) => {
 				const relativePath = path.relative( directory, file );
 				const entryName    = path.join( path.basename( directory ), relativePath.replace( extension, '' ) );
